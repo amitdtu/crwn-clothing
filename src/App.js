@@ -6,6 +6,8 @@ import Shop from "./pages/shops/shops.component";
 import Header from "./components/header/header.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 class App extends Component {
   state = {
@@ -39,7 +41,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <Provider store={store}>
         <BrowserRouter>
           <Header currentUser={this.state.currentUser} />
           <Switch>
@@ -48,7 +50,7 @@ class App extends Component {
             <Route exact path={"/signin"} component={SignInAndSignUpPage} />
           </Switch>
         </BrowserRouter>
-      </div>
+      </Provider>
     );
   }
 }
