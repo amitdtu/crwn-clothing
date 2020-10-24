@@ -75,3 +75,5 @@ const mapDispatch = (dispatch) => ({
 });
 
 export default connect(mapState, mapDispatch)(App);
+
+// in new pc
