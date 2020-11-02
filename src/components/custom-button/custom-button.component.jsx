@@ -1,5 +1,6 @@
 import React from "react";
 import "./custom-button.style.scss";
+import { CustomButtonContainer } from './custom-button.styles'
 
 export default function CustomButton({
   children,
@@ -18,3 +19,11 @@ export default function CustomButton({
     </div>
   );
 }
+
+// export default function CustomButton({children, ...props}) {
+//   return (
+//       <CustomButtonContainer {...props}>
+//         {children}
+//       </CustomButtonContainer>
+//   );
+// }
