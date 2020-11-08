@@ -7,11 +7,11 @@ import Header from "./components/header/header.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import CheckoutPage from "./pages/checkout/checkout.component"
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument, addCollectionAndDocuments } from "./firebase/firebase.utils";
 import { connect } from "react-redux";
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selector'
-
+import { selectCollectionForPreview } from './redux/shop/shop.selector'
 import { setCurrentUser } from "./redux/user/user.action";
 
 class App extends Component {
@@ -22,7 +22,7 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const userRef = await createUserProfileDocument(user);
@@ -33,9 +33,11 @@ class App extends Component {
           });
         });
       } else {
-        this.props.setCurrentUser(user);
+        setCurrentUser(user);
       }
     });
+
+    // addCollectionAndDocuments('collections',  )
   }
 
   componentWillUnmount() {

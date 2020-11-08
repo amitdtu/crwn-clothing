@@ -1,11 +1,19 @@
+import { act } from 'react-dom/test-utils';
 import SHOP_DATA from './shop.data';
+import ShopActionTypes from './shop.type'
 
 const INITIAL_STATE = {
-    collections: SHOP_DATA,
+    collections: null,
 }
 
 const shopReducer = (state = INITIAL_STATE, action ) => {
     switch(action.type){
+        case ShopActionTypes.UPDATE_COLLECTION:
+            return {
+                ...state,
+                collections: action.payload,
+            }
+
         default:
             return state;
     }
