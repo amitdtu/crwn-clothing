@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import { userSagas } from "../redux/user/user.sagas";
 
 const config = {
   apiKey: "AIzaSyASDh-z3RTmqZ0zWthEr8uTRMzryC6hehQ",
@@ -67,16 +68,27 @@ export const convertCollectionsSnapsotToMap = (collection) => {
     return accumulator;
   } ,{})
 
-  console.log(transformedCollection)
+  // console.log(transformedCollection)
 }
 
 firebase.initializeApp(config);
 
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged(userAuth => {
+      unsubscribe();
+      resolve(userAuth)
+    }, reject)
+  }) 
+}
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: "select_account" });
-export const signInWithGoogle = () => firebase.auth().signInWithPopup(provider);
+
+
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
+export const signInWithGoogle = () => firebase.auth().signInWithPopup(googleProvider);
 
 export default firebase;

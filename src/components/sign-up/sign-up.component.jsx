@@ -1,59 +1,46 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
-import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
+// import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
+import { signUpStart } from '../../redux/user/user.action'
 import "./sign-up.style.scss";
+import { connect } from "react-redux";
 
-class SignUp extends Component {
-  state = {
+const SignUp = ({ signUpStart,  }) => {
+  const [userCredentials, setUserCredentials] = useState({
     displayName: "",
     email: "",
     password: "",
     confirmpassword: "",
-  };
+  })
 
-  handleSubmit = async (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { displayName, email, password, confirmpassword } = this.state;
+    const { displayName, email, password, confirmpassword } = userCredentials;
     if (password !== confirmpassword) {
       alert("Password doesn't match");
       return;
     }
-
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      await createUserProfileDocument(user, { displayName });
-      this.setState({
-        displayName: "",
-        email: "",
-        password: "",
-        confirmpassword: "",
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    signUpStart({email, password, displayName})
   };
 
-  handleOnChange = (event) => {
+  const handleOnChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    setUserCredentials({...userCredentials, [name]: value });
   };
 
-  render() {
-    const { displayName, email, password, confirmpassword } = this.state;
+    const { displayName, email, password, confirmpassword } = userCredentials;
     return (
       <div className="sign-up">
         <h2 className="title">I do not have a account</h2>
         <span>Sign Up with your email and password</span>
-        <form className="sign-up-form" onSubmit={this.handleSubmit}>
+        <form className="sign-up-form" onSubmit={handleSubmit}>
           <FormInput
             type="text"
             name="displayName"
             value={displayName}
-            onChange={this.handleOnChange}
+            onChange={handleOnChange}
             label="Display Name"
             required
           />
@@ -61,7 +48,7 @@ class SignUp extends Component {
             type="email"
             name="email"
             value={email}
-            onChange={this.handleOnChange}
+            onChange={handleOnChange}
             label="Email"
             required
           />
@@ -69,7 +56,7 @@ class SignUp extends Component {
             type="password"
             name="password"
             value={password}
-            onChange={this.handleOnChange}
+            onChange={handleOnChange}
             label="Password"
             required
           />
@@ -77,7 +64,7 @@ class SignUp extends Component {
             type="password"
             name="confirmpassword"
             value={confirmpassword}
-            onChange={this.handleOnChange}
+            onChange={handleOnChange}
             label="Confirm Password"
             required
           />
@@ -86,6 +73,9 @@ class SignUp extends Component {
       </div>
     );
   }
-}
 
-export default SignUp;
+const mapDispatch = dispatch => ({
+  signUpStart: userCredentials => dispatch(signUpStart(userCredentials))
+})
+
+export default connect(null, mapDispatch)(SignUp);
